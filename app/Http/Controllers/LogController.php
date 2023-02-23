@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\LogStatusEnum;
+use App\Http\Requests\StoreLogRequest;
 use App\Models\Log;
 use App\Models\LogLevel;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use ProtoneMedia\LaravelQueryBuilderInertiaJs\InertiaTable;
@@ -32,10 +32,9 @@ class LogController extends Controller
             $statusOptions[$logStatus] = $logStatus;
         });
 
-
         $logs = QueryBuilder::for(Log::class)
             ->join($logLevelTable, "$logTable.log_level_id", "$logLevelTable.id")
-            ->allowedSorts(["level", "content", "latest_reported_at", "total_incidents"])
+            ->allowedSorts(["level", "content", "latest_reported_at", "total_incidents", "status"])
             ->defaultSort("-latest_reported_at")
             ->allowedFilters([
                 AllowedFilter::exact(name: "level", internalName: "$logLevelTable.level"),
@@ -45,19 +44,23 @@ class LogController extends Controller
             ->groupBy(["$logTable.content", "$logLevelTable.level", "$logTable.status"])
             ->select([
                 "$logLevelTable.level",
+                //DB::raw("LEFT($logTable.content, 10) AS content"),
                 "$logTable.content",
                 "$logTable.status",
                 DB::raw("MAX($logTable.created_at) as latest_reported_at"),
-                DB::raw("COUNT($logTable.id) as total_incidents")
+                DB::raw("MAX($logTable.id) as id"),
+                DB::raw("COUNT($logTable.id) as total_incidents"),
+                DB::raw("'' as actions")
             ])
             ->paginate(perPage: $perPage, page: $page)
-            ->withQueryString()
-            ->toArray();
+            ->withQueryString();
+
 
         return Inertia::render("Logs/Index", [
             "logs" => $logs
         ])->table(function (InertiaTable $table) use ($logLevelTable, $logTable, $levelOptions, $statusOptions) {
             $table->withGlobalSearch()
+                ->column(key: "actions", label: "Actions", canBeHidden: false)
                 ->column(key: "level", label: 'Level', sortable: true)
                 ->column(key: "content", label: 'Content', sortable: true)
                 ->column(key: "status", label: 'Status', sortable: true)
@@ -66,5 +69,37 @@ class LogController extends Controller
                 ->selectFilter(key: "level", options: $levelOptions, label: "Level")
                 ->selectFilter(key: "status", options: $statusOptions, label: "Status");
         });
+    }
+
+    public function store(StoreLogRequest $storeLogRequest)
+    {
+        $logLevelId = LogLevel::where("level", $storeLogRequest->get("level"))->first()->id;
+        Log::create([
+            "log_level_id" => $logLevelId,
+            "content" => $storeLogRequest->get("content")
+        ]);
+
+        return response()->json([
+            "message" => "Log has been reported successfully"
+        ], 201);
+    }
+
+    public function show(Log $log)
+    {
+        $identicalLogs = $log->identical_logs;
+
+        return Inertia::render("Logs/Show", [
+            "log" => $log,
+            "content" => json_encode($log->content),
+            "reports" => [
+                "identical_logs" => $identicalLogs,
+                "identical_log_ids" => $identicalLogs->pluck("id")->toArray(),
+                "total_incidents" => $identicalLogs->count(),
+                "one_day_incidents" => $identicalLogs->where("created_at", ">", now()->subDay())->count(),
+                "one_week_incidents" => $identicalLogs->where("created_at", ">", now()->subWeek())->count(),
+                "one_month_incidents" => $identicalLogs->where("created_at", ">", now()->subMonth())->count(),
+                "timestamps" => $identicalLogs->sortByDesc("created_at")->pluck("created_at")->toArray()
+            ]
+        ]);
     }
 }

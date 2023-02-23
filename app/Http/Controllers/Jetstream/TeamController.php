@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Jetstream;
 
 use App\Http\Controllers\Controller;
+use App\Models\Team;
+use App\Models\TeamSecretKey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Jetstream\Jetstream;
@@ -17,7 +19,6 @@ class TeamController extends Controller
         $team = Jetstream::newTeamModel()->findOrFail($teamId);
 
         Gate::authorize('view', $team);
-
 
         $team->load('owner', 'users', 'teamInvitations', 'secretKeys');
         return Jetstream::inertia()->render($request, 'Teams/Show', [
@@ -39,6 +40,20 @@ class TeamController extends Controller
         $team = Jetstream::newTeamModel()->findOrFail($teamId);
 
         $team->secretKeys()->create();
+
+        session()->flash("flash.bannerStyle", "success");
+        session()->flash("flash.banner", "Secret token has been successfully generated");
+
+        return back(303);
+    }
+
+    public function destroySecretToken(Team $team, TeamSecretKey $key)
+    {
+        Gate::authorize("update", $team);
+        $key->delete();
+
+        session()->flash("flash.bannerStyle", "success");
+        session()->flash("flash.banner", "Secret token has been successfully deleted");
 
         return back(303);
     }

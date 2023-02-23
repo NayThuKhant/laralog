@@ -18,33 +18,39 @@ class DatabaseSeeder extends Seeder
     {
         Artisan::call("migrate:fresh");
 
-        $this->call([
-            LogLevelSeeder::class,
-            LogSeeder::class
-        ]);
-
         User::truncate();
 
         $userAttributes = [
             "password" => Hash::make("password"),
         ];
 
-        $user = User::create([
+        $user[] = User::create([
             "name" => "Nay Thu Khant",
-            "email" => "naythukhant@onenex.co",
+            "email" => "superadmin@gmail.com",
             ...$userAttributes,
-            "current_team_id" => 1
+            "current_team_id" => 0
         ]);
 
-        User::create([
+        $user[] = User::create([
             "name" => "Nay Thu Khant",
             "email" => "naythukhant644@gmail.com",
             ...$userAttributes,
             "current_team_id" => 0
         ]);
 
-        Arr::map([["name" => "Yoma Living App (Development)"], ["name" => "Yoma Living App (Production)"]], function ($team) use ($user) {
+        Arr::map([
+            ["name" => "Laralog (DEV)"],
+            ["name" => "Laralog (QA)"],
+            ["name" => "Laralog (UAT)"],
+            ["name" => "Laralog (PROD)"]
+        ], function ($team) use ($user) {
+            $user = Arr::random($user);
             Team::create(["user_id" => $user->id, "personal_team" => false, ...$team]);
         });
+
+        $this->call([
+            LogLevelSeeder::class,
+            LogSeeder::class
+        ]);
     }
 }

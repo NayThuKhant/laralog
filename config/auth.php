@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'team' => [
+            'driver' => 'team',
+            'provider' => 'teams'
+        ]
     ],
 
     /*
@@ -111,5 +116,4 @@ return [
     */
 
     'password_timeout' => 10800,
-
 ];

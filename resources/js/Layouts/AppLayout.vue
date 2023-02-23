@@ -1,12 +1,12 @@
 <script setup>
 import {ref} from 'vue';
 import {Head, Link, router} from '@inertiajs/vue3';
-import ApplicationMark from '@/Components/ApplicationMark.vue';
-import Banner from '@/Components/Banner.vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import Banner from "@/Components/Banner.vue";
 
 defineProps({
     title: String,
@@ -41,8 +41,8 @@ const logout = () => {
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
-                                    <ApplicationMark class="block h-9 w-auto"/>
+                                <Link :href="route('home')">
+                                    <ApplicationLogo/>
                                 </Link>
                             </div>
 
@@ -66,7 +66,9 @@ const logout = () => {
                                         <span class="inline-flex rounded-md">
                                             <button type="button"
                                                     class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
-                                                {{ $page.props.auth.user.current_team ? $page.props.auth.user.current_team.name : "CHOOSE A TEAM" }}
+                                                {{
+                                                    $page.props.auth.user.current_team ? $page.props.auth.user.current_team.name : "CHOOSE A TEAM"
+                                                }}
 
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                                      fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -88,7 +90,7 @@ const logout = () => {
 
                                                 <!-- Team Settings -->
                                                 <DropdownLink v-if="$page.props.auth.user.current_team"
-                                                    :href="route('teams.show', $page.props.auth.user.current_team)">
+                                                              :href="route('teams.show', $page.props.auth.user.current_team)">
                                                     Team Settings
                                                 </DropdownLink>
 
@@ -268,9 +270,9 @@ const logout = () => {
                                     Manage Team
                                 </div>
 
-                                 Team Settings
+                                Team Settings
                                 <ResponsiveNavLink v-if="$page.props.auth.user.current_team"
-                                    :href="route('teams.show', $page.props.auth.user.current_team)"
+                                                   :href="route('teams.show', $page.props.auth.user.current_team)"
                                                    :active="route().current('teams.show')">
                                     Team Settings
                                 </ResponsiveNavLink>
@@ -288,7 +290,7 @@ const logout = () => {
                                     Switch Teams
                                 </div>
 
-                                {{$page.props.auth.user.all_teams}}
+                                {{ $page.props.auth.user.all_teams }}
 
                                 <template v-for="team in $page.props.auth.user.all_teams" :key="team.id">
                                     <form @submit.prevent="switchToTeam(team)">
@@ -321,7 +323,9 @@ const logout = () => {
 
             <!-- Page Content -->
             <main>
-                <slot/>
+                <div class="max-w-7xl mx-auto p-6 lg:p-8">
+                    <slot/>
+                </div>
             </main>
         </div>
     </div>

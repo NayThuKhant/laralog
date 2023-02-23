@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
@@ -16,10 +17,15 @@ class TeamSecretKey extends Model
         parent::boot();
         static::creating(function (TeamSecretKey $teamSecretKey) {
             do {
-                $randomString = str_shuffle(Str::random(12));
-            } while(TeamSecretKey::where("encrypted_secret_key", $randomString)->first());
+                $randomString = str_shuffle(Str::random(18));
+            } while (TeamSecretKey::where("encrypted_secret_key", $randomString)->first());
 
             $teamSecretKey->encrypted_secret_key = $randomString;
         });
+    }
+
+    public function team(): BelongsTo
+    {
+        return $this->belongsTo(Team::class);
     }
 }

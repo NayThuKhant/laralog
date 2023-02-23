@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Inertia\Inertia;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -44,5 +46,16 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        $exceptionClass = get_class($exception);
+
+        switch ($exceptionClass) {
+            case AuthorizationException::class:
+                return Inertia::render("Error", ["code" => "UNAUTHORIZED", "message" => "This action is unauthorized"]);
+        }
+        return parent::render($request, $exception);
     }
 }

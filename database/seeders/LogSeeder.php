@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\LogStatusEnum;
 use App\Models\Log;
 use App\Models\LogLevel;
+use App\Models\Team;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
 
@@ -18,14 +19,20 @@ class LogSeeder extends Seeder
         $logLevels = LogLevel::select("id")->get()->pluck("id")->toArray();
         $logStatuses = array_column(LogStatusEnum::cases(), "value");
 
-        \Arr::map(range(1, 1000), function () use ($logLevels,  $logStatuses) {
-            $level = Arr::random($logLevels);
-            $content = [
-                "error" => "helloworld" . Arr::random($logLevels)
-            ];
-            $status = $logStatuses[Arr::random([0,1])];
+        Team::select("log_table")->get()->pluck("log_table")->each(function ($logTable) use ($logStatuses, $logLevels) {
+            $logModel = (new Log())->setTable($logTable);
 
-            Log::create(["log_level_id" =>  $level, "content" =>  $content, "status" => $status]);
+            \Arr::map(range(1, Arr::random([500, 1000, 2000])), function () use ($logModel, $logLevels, $logStatuses) {
+                $payload = [
+                    "log_level_id" => Arr::random($logLevels),
+                    "content" => [
+                        "error" => "Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep!" . Arr::random($logLevels)
+                    ],
+                    "status" => $logStatuses[Arr::random([0,1])]
+                ];
+
+                $logModel->create($payload);
+            });
         });
     }
 }

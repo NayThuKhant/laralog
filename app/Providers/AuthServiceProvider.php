@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Auth\TeamGuard;
+use App\Auth\TeamProvider;
 use App\Models\Team;
 use App\Policies\TeamPolicy;
+use Auth;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -25,5 +28,19 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         //
+    }
+
+    public function register()
+    {
+        parent::register();
+
+        Auth::provider('teams', function ($app, array $config) {
+            dd("work");
+            return new TeamProvider();
+        });
+
+        Auth::extend('team', function ($app, $name, array $config) {
+            return new TeamGuard(Auth::createUserProvider($config['provider']), $app['request']);
+        });
     }
 }
