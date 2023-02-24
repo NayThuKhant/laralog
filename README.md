@@ -1,12 +1,5 @@
 # Laralog
 
-
-![Dashboard](docs/screenshots/dashboard.png)
-![Logs](docs/screenshots/logs.png)
-![Log](docs/screenshots/log.png)
-
-
-
 ### installation
 
 ```
@@ -17,3 +10,11 @@ composer install
 php artisan db:seed 
 npm install && npm run local
 ```
+
+![Dashboard](docs/screenshots/dashboard.png)
+![Logs](docs/screenshots/logs.png)
+![Log](docs/screenshots/log.png)
+
+
+
+
