@@ -1,5 +1,12 @@
 # Laralog
 
+
+![Dashboard](docs/screenshots/dashboard.png)
+![Logs](docs/screenshots/logs.png)
+![Log](docs/screenshots/log.png)
+
+
+
 ### installation
 
 ```
