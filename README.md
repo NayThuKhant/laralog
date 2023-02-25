@@ -4,9 +4,9 @@
 
 ```
 git clone git@github.com:NayThuKhant/laralog.git
+composer install
 cp .env.example .env
 php artisan key:generate
-composer install
 php artisan db:seed 
 npm install && npm run local
 ```
