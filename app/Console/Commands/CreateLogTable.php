@@ -36,7 +36,7 @@ class CreateLogTable extends Command
             $table->foreignId("log_level_id")->constrained()->onDelete("cascade");
             $table->string("status")->default(LogStatusEnum::UNRESOLVED->value);
             $table->string("message");
-            $table->json("content")->nullable();
+            $table->json("context")->nullable();
             $table->timestamps();
         });
     }

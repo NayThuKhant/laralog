@@ -41,10 +41,10 @@ class LogController extends Controller
                 AllowedFilter::exact(name: "status", internalName: "$logTable.status"),
                 AllowedFilter::partial(name: "global", internalName: "$logTable.message")
             ])
-            ->groupBy(["$logTable.content", "$logTable.message", "$logLevelTable.level", "$logTable.status"])
+            ->groupBy(["$logTable.context", "$logTable.message", "$logLevelTable.level", "$logTable.status"])
             ->select([
                 "$logLevelTable.level",
-                //DB::raw("LEFT($logTable.content, 10) AS content"),
+                //DB::raw("LEFT($logTable.context, 10) AS context"),
                 "$logTable.status",
                 "$logTable.message",
                 DB::raw("MAX($logTable.created_at) as latest_reported_at"),
@@ -76,7 +76,7 @@ class LogController extends Controller
         $logLevelId = LogLevel::where("level", $storeLogRequest->get("level"))->first()->id;
         Log::create([
             "log_level_id" => $logLevelId,
-            "content" => $storeLogRequest->get("content"),
+            "context" => $storeLogRequest->get("context"),
             "message" => $storeLogRequest->get("message")
         ]);
 
@@ -91,7 +91,7 @@ class LogController extends Controller
 
         return Inertia::render("Logs/Show", [
             "log" => $log->load("logLevel"),
-            "content" => json_encode($log->content),
+            "context" => json_encode($log->context),
             "reports" => [
                 "identical_logs" => $identicalLogs,
                 "identical_log_ids" => $identicalLogs->pluck("id")->toArray(),

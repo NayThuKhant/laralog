@@ -12,7 +12,7 @@ const props = defineProps({
     log: {
         type: Object
     },
-    content: {
+    context: {
         type: String
     },
     reports: {
@@ -30,8 +30,8 @@ const props = defineProps({
     <AppLayout title="Log">
         <div class="report-card">
             <div class="flex justify-between">
-                <p class="font-bold mb-3">Content</p>
-                <div class="flex mb-4  cursor-pointer" v-if="log.content">
+                <p class="font-bold mb-3">Context</p>
+                <div class="flex mb-4  cursor-pointer" v-if="log.context">
                     <div class="flex justify-between items-center"
                          @click="state.openJsonViewer = !state.openJsonViewer">
                         <div class="w-12 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
@@ -47,13 +47,13 @@ const props = defineProps({
 
             </div>
 
-            <div v-if="log.content">
-                <JsonTreeView v-if="state.openJsonViewer" :data="content" :maxDepth="3" color-scheme="dark"/>
+            <div v-if="log.context">
+                <JsonTreeView v-if="state.openJsonViewer" :data="context" :maxDepth="3" color-scheme="dark"/>
                 <p v-else>
-                    {{ content }}
+                    {{ context }}
                 </p>
             </div>
-            <div v-else>No content found for this log.</div>
+            <div v-else>No context found for this log.</div>
         </div>
 
         <div class="report-card">

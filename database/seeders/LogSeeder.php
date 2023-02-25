@@ -28,12 +28,12 @@ class LogSeeder extends Seeder
             \Arr::map(range(1, Arr::random([500, 1000, 2000])), function () use ( $messages, $logModel, $logLevels, $logStatuses) {
                 $message = $messages[array_rand($messages)];
                 $logStatus = $logStatuses[array_rand($logStatuses)];
-                $content = random_int(0,1) ? ["error" => "Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep!" . Arr::random($logLevels)] : null;
+                $context = random_int(0,1) ? ["error" => "Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep! Beep Beep!" . Arr::random($logLevels)] : null;
 
 
                 $payload = [
                     "log_level_id" => Arr::random($logLevels),
-                    "content" => $content,
+                    "context" => $context,
                     "status" => $logStatus,
                     "message" => $message
                 ];

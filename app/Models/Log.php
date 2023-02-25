@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 class Log extends Model
 {
-    protected $fillable = ["log_level_id", "content", "message"];
+    protected $fillable = ["log_level_id", "context", "message"];
 
-    protected $casts = ["content" => "array"];
+    protected $casts = ["context" => "array"];
 
     public function getTable()
     {
@@ -36,9 +36,9 @@ class Log extends Model
                 return Log::where("log_level_id", $this->log_level_id)
                     ->where("status", $this->status)
                     ->where("message", $this->message)
-                    ->select(["id", "created_at", "content"])
+                    ->select(["id", "created_at", "context"])
                     ->get()
-                    ->filter(fn (Log $log) => $this->content === $log->content);
+                    ->filter(fn (Log $log) => $this->context === $log->context);
             });
 
     }
