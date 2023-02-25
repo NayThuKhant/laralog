@@ -27,7 +27,7 @@ class StoreLogRequest extends FormRequest
         return [
             "message" => "required|string",
             "level" => ["string", "required", "exists:$logLevelTable"],
-            "context" => ["required", "array", "min:1"],
+            "context" => ["nullable", "array"],
         ];
     }
 }
