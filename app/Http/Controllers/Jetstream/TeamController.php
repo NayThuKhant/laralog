@@ -21,6 +21,7 @@ class TeamController extends Controller
         Gate::authorize('view', $team);
 
         $team->load('owner', 'users', 'teamInvitations', 'secretKeys');
+
         return Jetstream::inertia()->render($request, 'Teams/Show', [
             'team' => $team,
             'availableRoles' => array_values(Jetstream::$roles),
@@ -41,19 +42,19 @@ class TeamController extends Controller
 
         $team->secretKeys()->create();
 
-        session()->flash("flash.bannerStyle", "success");
-        session()->flash("flash.banner", "Secret token has been successfully generated");
+        session()->flash('flash.bannerStyle', 'success');
+        session()->flash('flash.banner', 'Secret token has been successfully generated');
 
         return back(303);
     }
 
     public function destroySecretToken(Team $team, TeamSecretKey $key)
     {
-        Gate::authorize("update", $team);
+        Gate::authorize('update', $team);
         $key->delete();
 
-        session()->flash("flash.bannerStyle", "success");
-        session()->flash("flash.banner", "Secret token has been successfully deleted");
+        session()->flash('flash.bannerStyle', 'success');
+        session()->flash('flash.banner', 'Secret token has been successfully deleted');
 
         return back(303);
     }

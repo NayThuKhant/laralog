@@ -14,9 +14,9 @@ class LogLevelSeeder extends Seeder
      */
     public function run(): void
     {
-        $logLevels = array_column(LogLevelEnum::cases(), "value");
+        $logLevels = array_column(LogLevelEnum::cases(), 'value');
         $logLevels = Arr::map($logLevels, function ($logLevel) {
-            return ["level" => $logLevel];
+            return ['level' => $logLevel];
         });
         LogLevel::insert($logLevels);
     }

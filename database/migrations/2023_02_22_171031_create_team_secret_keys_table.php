@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('team_secret_keys', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("team_id")->constrained()->onDelete("cascade");
-            $table->string("encrypted_secret_key");
+            $table->foreignId('team_id')->constrained()->onDelete('cascade');
+            $table->string('encrypted_secret_key');
             $table->timestamps();
         });
     }

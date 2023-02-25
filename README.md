@@ -1,6 +1,6 @@
 # Laralog
 
-A Log Server implementation in Laravel. This server implementation is compatible with all kine of languages, you can simply call the API to store or report your application log
+A Log Server implementation in Laravel. This server implementation is compatible with all kind of languages, you can simply call the API to store or report your application log
 
 ### installation
 
@@ -21,7 +21,7 @@ npm install && npm run local
 
 [Client package for Laravel](https://packagist.org/packages/laranex/laralog-client)
 
-### If you don't want to use our supported plugins, you can simply call the API via your prefered http client
+### If you don't want to use our supported plugins, you can simply call the API via your preferred http client.
 
 
 

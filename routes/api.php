@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\LogController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:team')->group(function () {
-    Route::post("/logs", [LogController::class, 'store'])->name("logs.store");
+    Route::post('/logs', [LogController::class, 'store'])->name('logs.store');
 });

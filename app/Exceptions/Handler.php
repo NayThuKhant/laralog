@@ -54,8 +54,9 @@ class Handler extends ExceptionHandler
 
         switch ($exceptionClass) {
             case AuthorizationException::class:
-                return Inertia::render("Error", ["code" => "UNAUTHORIZED", "message" => "This action is unauthorized"]);
+                return Inertia::render('Error', ['code' => 'UNAUTHORIZED', 'message' => 'This action is unauthorized']);
         }
+
         return parent::render($request, $exception);
     }
 }

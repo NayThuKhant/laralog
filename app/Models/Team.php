@@ -50,18 +50,17 @@ class Team extends JetstreamTeam implements Authenticatable
     {
         parent::boot();
         static::creating(function (Team $team) {
-
             do {
                 $randomString = str_shuffle(Str::random(12));
                 $logTableName = "logs_$randomString";
-            } while (Team::where("log_table", $logTableName)->first());
+            } while (Team::where('log_table', $logTableName)->first());
 
             $team->log_table = $logTableName;
-            Artisan::call("logs:create-table", ["table" => $logTableName]);
+            Artisan::call('logs:create-table', ['table' => $logTableName]);
         });
 
         static::deleting(function (Team $team) {
-            Artisan::call("logs:drop-table", ["table" => $team->log_table]);
+            Artisan::call('logs:drop-table', ['table' => $team->log_table]);
             $team->secretKeys()->delete();
         });
     }
@@ -104,7 +103,6 @@ class Team extends JetstreamTeam implements Authenticatable
     }
 
     /**
-     * @param $value
      * @return void
      */
     public function setRememberToken($value)

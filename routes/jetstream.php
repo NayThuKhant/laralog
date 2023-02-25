@@ -21,7 +21,7 @@ Route::group(['middleware' => config('jetstream.middleware', ['web'])], function
     }
 
     $authMiddleware = config('jetstream.guard')
-        ? 'auth:' . config('jetstream.guard')
+        ? 'auth:'.config('jetstream.guard')
         : 'auth';
 
     $authSessionMiddleware = config('jetstream.auth_session', false)
@@ -59,7 +59,7 @@ Route::group(['middleware' => config('jetstream.middleware', ['web'])], function
                 Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
                 Route::get('/teams/{team}', [\App\Http\Controllers\Jetstream\TeamController::class, 'show'])->name('teams.show');
                 Route::put('/teams/{team}', [TeamController::class, 'update'])->name('teams.update');
-                Route::delete('/teams/{team}', [TeamController::class, 'destroy'])->name('teams.destroy')->middleware("password.confirm");
+                Route::delete('/teams/{team}', [TeamController::class, 'destroy'])->name('teams.destroy')->middleware('password.confirm');
                 Route::put('/current-team', [CurrentTeamController::class, 'update'])->name('current-team.update');
                 Route::post('/teams/{team}/members', [TeamMemberController::class, 'store'])->name('team-members.store');
                 Route::put('/teams/{team}/members/{user}', [TeamMemberController::class, 'update'])->name('team-members.update');
@@ -73,10 +73,10 @@ Route::group(['middleware' => config('jetstream.middleware', ['web'])], function
                     ->name('team-invitations.destroy');
 
                 // Custom Team Functions
-                Route::post("/teams/{team}/secret-keys", [\App\Http\Controllers\Jetstream\TeamController::class, "generateSecretToken"])
-                    ->name("teams.generate-secret-key");
-                Route::delete("teams/{team}/secret-keys/{key}", [\App\Http\Controllers\Jetstream\TeamController::class, "destroySecretToken"])
-                    ->name("teams.destroy-secret-key")->middleware("password.confirm");
+                Route::post('/teams/{team}/secret-keys', [\App\Http\Controllers\Jetstream\TeamController::class, 'generateSecretToken'])
+                    ->name('teams.generate-secret-key');
+                Route::delete('teams/{team}/secret-keys/{key}', [\App\Http\Controllers\Jetstream\TeamController::class, 'destroySecretToken'])
+                    ->name('teams.destroy-secret-key')->middleware('password.confirm');
             }
         });
     });

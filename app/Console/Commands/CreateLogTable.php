@@ -20,7 +20,6 @@ class CreateLogTable extends Command
      * The console command description.
      *
      * @var string
-     *
      */
     protected $description = 'This command will create a log table using the given table name';
 
@@ -29,14 +28,14 @@ class CreateLogTable extends Command
      */
     public function handle(): void
     {
-        $table = $this->argument("table");
+        $table = $this->argument('table');
 
         Schema::create($table, function (Blueprint $table) {
             $table->id();
-            $table->foreignId("log_level_id")->constrained()->onDelete("cascade");
-            $table->string("status")->default(LogStatusEnum::UNRESOLVED->value);
-            $table->string("message");
-            $table->json("context")->nullable();
+            $table->foreignId('log_level_id')->constrained()->onDelete('cascade');
+            $table->string('status')->default(LogStatusEnum::UNRESOLVED->value);
+            $table->string('message');
+            $table->json('context')->nullable();
             $table->timestamps();
         });
     }

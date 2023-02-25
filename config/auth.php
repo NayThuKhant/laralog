@@ -43,8 +43,8 @@ return [
 
         'team' => [
             'driver' => 'team',
-            'provider' => 'teams'
-        ]
+            'provider' => 'teams',
+        ],
     ],
 
     /*

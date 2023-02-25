@@ -19,21 +19,21 @@ use Inertia\Inertia;
 |
 */
 
-Route::get("/", function () {
-    return Inertia::render("Welcome", [
-        "canLogin" => Route::has("login"),
-        "canRegister" => Route::has("register"),
-        "laravelVersion" => Application::VERSION,
-        "phpVersion" => PHP_VERSION,
-        "totalUserCount" => User::count(),
-        "totalTeamCount" => Team::count()
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+        'totalUserCount' => User::count(),
+        'totalTeamCount' => Team::count(),
     ]);
-})->name("home");
+})->name('home');
 
-Route::middleware(["auth:sanctum", config("jetstream.auth_session"), "verified", "must.select.team"])->group(function () {
-    Route::get("/dashboard", DashboardController::class)->name("dashboard");
-    Route::get("/logs", [LogController::class, "index"])->name("logs.index");
-    Route::get("/logs/{log}", [LogController::class, "show"])->name("logs.show");
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified', 'must.select.team'])->group(function () {
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+    Route::get('/logs/{log}', [LogController::class, 'show'])->name('logs.show');
 });
 
-require_once "jetstream.php";
+require_once 'jetstream.php';

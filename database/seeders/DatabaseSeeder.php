@@ -16,41 +16,41 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Artisan::call("migrate:fresh");
+        Artisan::call('migrate:fresh');
 
         User::truncate();
 
         $userAttributes = [
-            "password" => Hash::make("password"),
+            'password' => Hash::make('password'),
         ];
 
         $user[] = User::create([
-            "name" => "Nay Thu Khant",
-            "email" => "superadmin@gmail.com",
+            'name' => 'Nay Thu Khant',
+            'email' => 'superadmin@gmail.com',
             ...$userAttributes,
-            "current_team_id" => 0
+            'current_team_id' => 0,
         ]);
 
         $user[] = User::create([
-            "name" => "Nay Thu Khant",
-            "email" => "naythukhant644@gmail.com",
+            'name' => 'Nay Thu Khant',
+            'email' => 'naythukhant644@gmail.com',
             ...$userAttributes,
-            "current_team_id" => 0
+            'current_team_id' => 0,
         ]);
 
         Arr::map([
-            ["name" => "Laralog (DEV)"],
-            ["name" => "Laralog (QA)"],
-            ["name" => "Laralog (UAT)"],
-            ["name" => "Laralog (PROD)"]
+            ['name' => 'Laralog (DEV)'],
+            ['name' => 'Laralog (QA)'],
+            ['name' => 'Laralog (UAT)'],
+            ['name' => 'Laralog (PROD)'],
         ], function ($team) use ($user) {
             $user = Arr::random($user);
-            Team::create(["user_id" => $user->id, "personal_team" => false, ...$team]);
+            Team::create(['user_id' => $user->id, 'personal_team' => false, ...$team]);
         });
 
         $this->call([
             LogLevelSeeder::class,
-            LogSeeder::class
+            LogSeeder::class,
         ]);
     }
 }

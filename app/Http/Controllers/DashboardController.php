@@ -27,8 +27,8 @@ class DashboardController extends Controller
             })
             ->toArray();
 
-        return Inertia::render("Dashboard", [
-            "logLevelCounts" => $logLevelCounts
+        return Inertia::render('Dashboard', [
+            'logLevelCounts' => $logLevelCounts,
         ]);
     }
 }

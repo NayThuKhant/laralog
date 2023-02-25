@@ -19,7 +19,6 @@ class DropLogTable extends Command
      * The console command description.
      *
      * @var string
-     *
      */
     protected $description = 'This command will drop the given table';
 
@@ -28,9 +27,10 @@ class DropLogTable extends Command
      */
     public function handle(): void
     {
-        $table = $this->argument("table");
-        if (!Str::startsWith($table ,"logs")) {
+        $table = $this->argument('table');
+        if (! Str::startsWith($table, 'logs')) {
             $this->info("$table is not one of the log tables and can't be deleted via this command");
+
             return;
         }
 

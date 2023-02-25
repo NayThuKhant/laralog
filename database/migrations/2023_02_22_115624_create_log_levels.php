@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('log_levels', function (Blueprint $table) {
             $table->id();
-            $table->string("level")->unique();
+            $table->string('level')->unique();
             $table->timestamps();
         });
     }

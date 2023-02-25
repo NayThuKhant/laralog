@@ -35,7 +35,8 @@ class AuthServiceProvider extends ServiceProvider
         parent::register();
 
         Auth::provider('teams', function ($app, array $config) {
-            dd("work");
+            dd('work');
+
             return new TeamProvider();
         });
 
