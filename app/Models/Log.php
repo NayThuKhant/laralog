@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Log extends Model
 {
-    protected $fillable = ["log_level_id", "content"];
+    protected $fillable = ["log_level_id", "content", "message"];
 
     protected $casts = ["content" => "array"];
 
@@ -24,12 +24,18 @@ class Log extends Model
         return $table ?? parent::getTable();
     }
 
+    public function logLevel(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(LogLevel::class);
+    }
+
     public function identicalLogs(): Attribute
     {
         return Attribute::make(
             get: function () {
                 return Log::where("log_level_id", $this->log_level_id)
                     ->where("status", $this->status)
+                    ->where("message", $this->message)
                     ->select(["id", "created_at", "content"])
                     ->get()
                     ->filter(fn (Log $log) => $this->content === $log->content);

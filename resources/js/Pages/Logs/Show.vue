@@ -28,25 +28,37 @@ const props = defineProps({
 
 <template>
     <AppLayout title="Log">
-        <div class="flex mb-4  cursor-pointer">
-            <div class="flex justify-between items-center"
-                 @click="state.openJsonViewer = !state.openJsonViewer">
-                <div class="w-12 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
-                     :class="{ 'bg-green-400': state.openJsonViewer}">
-                    <div class="bg-white w-5 h-5 rounded-full shadow-md transform duration-300 ease-in-out"
-                         :class="{ 'translate-x-5': state.openJsonViewer}"></div>
+        <div class="report-card">
+            <div class="flex justify-between">
+                <p class="font-bold mb-3">Content</p>
+                <div class="flex mb-4  cursor-pointer" v-if="log.content">
+                    <div class="flex justify-between items-center"
+                         @click="state.openJsonViewer = !state.openJsonViewer">
+                        <div class="w-12 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
+                             :class="{ 'bg-green-400': state.openJsonViewer}">
+                            <div class="bg-white w-5 h-5 rounded-full shadow-md transform duration-300 ease-in-out"
+                                 :class="{ 'translate-x-5': state.openJsonViewer}"></div>
+                        </div>
+                    </div>
+
+                    <span class="ml-3 text-gray-600 dark:text-gray-400">Json Viewer</span>
                 </div>
+
+
             </div>
 
-            <span class="ml-3 text-gray-600 dark:text-gray-400"> Json Viewer</span>
+            <div v-if="log.content">
+                <JsonTreeView v-if="state.openJsonViewer" :data="content" :maxDepth="3" color-scheme="dark"/>
+                <p v-else>
+                    {{ content }}
+                </p>
+            </div>
+            <div v-else>No content found for this log.</div>
         </div>
 
-
         <div class="report-card">
-            <JsonTreeView v-if="state.openJsonViewer" :data="content" :maxDepth="3" color-scheme="dark"/>
-            <p v-else>
-                {{ content }}
-            </p>
+            <p class="font-bold mb-3">{{log.log_level.level}}</p>
+            <p>{{log.message}}</p>
         </div>
 
         <div class="report-card flex flex-col">

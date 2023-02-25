@@ -34,19 +34,19 @@ class LogController extends Controller
 
         $logs = QueryBuilder::for(Log::class)
             ->join($logLevelTable, "$logTable.log_level_id", "$logLevelTable.id")
-            ->allowedSorts(["level", "content", "latest_reported_at", "total_incidents", "status"])
+            ->allowedSorts(["level", "message", "latest_reported_at", "total_incidents", "status"])
             ->defaultSort("-latest_reported_at")
             ->allowedFilters([
                 AllowedFilter::exact(name: "level", internalName: "$logLevelTable.level"),
                 AllowedFilter::exact(name: "status", internalName: "$logTable.status"),
-                AllowedFilter::partial(name: "global", internalName: "$logTable.content")
+                AllowedFilter::partial(name: "global", internalName: "$logTable.message")
             ])
-            ->groupBy(["$logTable.content", "$logLevelTable.level", "$logTable.status"])
+            ->groupBy(["$logTable.content", "$logTable.message", "$logLevelTable.level", "$logTable.status"])
             ->select([
                 "$logLevelTable.level",
                 //DB::raw("LEFT($logTable.content, 10) AS content"),
-                "$logTable.content",
                 "$logTable.status",
+                "$logTable.message",
                 DB::raw("MAX($logTable.created_at) as latest_reported_at"),
                 DB::raw("MAX($logTable.id) as id"),
                 DB::raw("COUNT($logTable.id) as total_incidents"),
@@ -62,7 +62,7 @@ class LogController extends Controller
             $table->withGlobalSearch()
                 ->column(key: "actions", label: "Actions", canBeHidden: false)
                 ->column(key: "level", label: 'Level', sortable: true)
-                ->column(key: "content", label: 'Content', sortable: true)
+                ->column(key: "message", label: 'Message', sortable: true)
                 ->column(key: "status", label: 'Status', sortable: true)
                 ->column(key: "total_incidents", label: 'Total Incidents', sortable: true)
                 ->column(key: "latest_reported_at", label: 'Latest Reported At', sortable: true)
@@ -76,7 +76,8 @@ class LogController extends Controller
         $logLevelId = LogLevel::where("level", $storeLogRequest->get("level"))->first()->id;
         Log::create([
             "log_level_id" => $logLevelId,
-            "content" => $storeLogRequest->get("content")
+            "content" => $storeLogRequest->get("content"),
+            "message" => $storeLogRequest->get("message")
         ]);
 
         return response()->json([
@@ -89,7 +90,7 @@ class LogController extends Controller
         $identicalLogs = $log->identical_logs;
 
         return Inertia::render("Logs/Show", [
-            "log" => $log,
+            "log" => $log->load("logLevel"),
             "content" => json_encode($log->content),
             "reports" => [
                 "identical_logs" => $identicalLogs,

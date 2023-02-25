@@ -25,8 +25,9 @@ class StoreLogRequest extends FormRequest
         $logLevelTable = (new LogLevel())->getTable();
 
         return [
+            "message" => "required|string",
             "level" => ["string", "required", "exists:$logLevelTable"],
-            "content" => ["required", "array", "min:1"]
+            "content" => ["required", "array", "min:1"],
         ];
     }
 }
