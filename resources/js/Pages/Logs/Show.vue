@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {JsonTreeView} from "json-tree-view-vue3";
-import {reactive} from "vue";
+import {computed, reactive} from "vue";
 
 const state = reactive({
     openJsonViewer: true
@@ -24,27 +24,48 @@ const props = defineProps({
     },
 })
 
+const isValidJsonMessage = computed(() => {
+    try {
+        JSON.parse(props.log.message)
+    } catch (e) {
+        return false;
+    }
+    return true;
+})
+
 </script>
 
 <template>
     <AppLayout title="Log">
+        <div class="flex mb-4  cursor-pointer">
+            <div class="flex justify-between items-center"
+                 @click="state.openJsonViewer = !state.openJsonViewer">
+                <div class="w-12 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
+                     :class="{ 'bg-green-400': state.openJsonViewer}">
+                    <div class="bg-white w-5 h-5 rounded-full shadow-md transform duration-300 ease-in-out"
+                         :class="{ 'translate-x-5': state.openJsonViewer}"></div>
+                </div>
+            </div>
+
+            <span class="ml-3 text-gray-600 dark:text-gray-400">Json Viewer</span>
+        </div>
+
+        <div class="report-card">
+            <p class="font-bold mb-3">LEVEL</p>
+            <p>{{ log.log_level.level }}</p>
+        </div>
+
+        <div class="report-card">
+            <p class="font-bold mb-3">Message</p>
+            <p v-if="!isValidJsonMessage">{{ log.message }}</p>
+            <div v-else>
+                <JsonTreeView v-if="state.openJsonViewer" :data="log.message" :maxDepth="3" color-scheme="dark"/>
+                <p v-if="!state.openJsonViewer">{{ log.message }}</p>
+            </div>
+        </div>
         <div class="report-card">
             <div class="flex justify-between">
                 <p class="font-bold mb-3">Context</p>
-                <div class="flex mb-4  cursor-pointer" v-if="log.context">
-                    <div class="flex justify-between items-center"
-                         @click="state.openJsonViewer = !state.openJsonViewer">
-                        <div class="w-12 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
-                             :class="{ 'bg-green-400': state.openJsonViewer}">
-                            <div class="bg-white w-5 h-5 rounded-full shadow-md transform duration-300 ease-in-out"
-                                 :class="{ 'translate-x-5': state.openJsonViewer}"></div>
-                        </div>
-                    </div>
-
-                    <span class="ml-3 text-gray-600 dark:text-gray-400">Json Viewer</span>
-                </div>
-
-
             </div>
 
             <div v-if="log.context">
@@ -54,11 +75,6 @@ const props = defineProps({
                 </p>
             </div>
             <div v-else>No context found for this log.</div>
-        </div>
-
-        <div class="report-card">
-            <p class="font-bold mb-3">{{log.log_level.level}}</p>
-            <p>{{log.message}}</p>
         </div>
 
         <div class="report-card flex flex-col">
