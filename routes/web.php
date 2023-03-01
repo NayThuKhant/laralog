@@ -34,6 +34,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
     Route::get('/logs/{log}', [LogController::class, 'show'])->name('logs.show');
+    Route::put('logs/{log}/update-status', [LogController::class, 'updateStatus'])->name('logs.update-status');
 });
 
 require_once 'jetstream.php';

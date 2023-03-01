@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -34,12 +35,17 @@ class Log extends Model
     {
         return Attribute::make(
             get: function () {
-                return Log::where('log_level_id', $this->log_level_id)
-                    ->where('status', $this->status)
-                    ->where('message', $this->message)
+                return Log::ofIdenticalLogs($this)
                     ->select(['id', 'created_at', 'context'])
                     ->get()
                     ->filter(fn (Log $log) => $this->context === $log->context);
             });
+    }
+
+    public function scopeOfIdenticalLogs(Builder $builder, Log $log): Builder
+    {
+        return $builder->where('log_level_id', $log->log_level_id)
+            ->where('status', $log->status)
+            ->where('message', $log->message);
     }
 }

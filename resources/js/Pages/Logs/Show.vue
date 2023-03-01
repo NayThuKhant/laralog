@@ -2,6 +2,8 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import {JsonTreeView} from "json-tree-view-vue3";
 import {computed, reactive} from "vue";
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import {useForm} from '@inertiajs/vue3';
 
 const state = reactive({
     openJsonViewer: true
@@ -24,6 +26,18 @@ const props = defineProps({
     },
 })
 
+const form = useForm({
+    status : ''
+});
+
+const updateLogStatus = () => {
+    form.status = props.log.status === "RESOLVED" ? "UNRESOLVED" : "RESOLVED";
+    form.put(route("logs.update-status", props.log.id), {
+        errorBag: "updateStatus",
+        preserveScroll: true
+    })
+}
+
 const isValidJsonMessage = computed(() => {
     try {
         JSON.parse(props.log.message)
@@ -37,17 +51,22 @@ const isValidJsonMessage = computed(() => {
 
 <template>
     <AppLayout title="Log">
-        <div class="flex mb-4  cursor-pointer">
-            <div class="flex justify-between items-center"
-                 @click="state.openJsonViewer = !state.openJsonViewer">
-                <div class="w-12 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
-                     :class="{ 'bg-green-400': state.openJsonViewer}">
-                    <div class="bg-white w-5 h-5 rounded-full shadow-md transform duration-300 ease-in-out"
-                         :class="{ 'translate-x-5': state.openJsonViewer}"></div>
+        <div class="flex items-center justify-between">
+            <div class="flex mb-4  cursor-pointer">
+                <div class="flex justify-between items-center"
+                     @click="state.openJsonViewer = !state.openJsonViewer">
+                    <div class="w-12 h-6 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
+                         :class="{ 'bg-green-400': state.openJsonViewer}">
+                        <div class="bg-white w-5 h-5 rounded-full shadow-md transform duration-300 ease-in-out"
+                             :class="{ 'translate-x-5': state.openJsonViewer}"></div>
+                    </div>
                 </div>
-            </div>
 
-            <span class="ml-3 text-gray-600 dark:text-gray-400">Json Viewer</span>
+                <span class="ml-3 text-gray-600 dark:text-gray-400">Json Viewer</span>
+            </div>
+            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="updateLogStatus">
+                Mark As {{log.status == "UNRESOLVED" ? "RESOLVED" : "UNRESOLVED"}}
+            </PrimaryButton>
         </div>
 
         <div class="report-card">

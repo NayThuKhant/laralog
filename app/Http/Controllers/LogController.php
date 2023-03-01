@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Enums\LogStatusEnum;
 use App\Http\Requests\StoreLogRequest;
+use App\Http\Requests\UpdateLogStatusRequest;
 use App\Models\Log;
 use App\Models\LogLevel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use ProtoneMedia\LaravelQueryBuilderInertiaJs\InertiaTable;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -101,5 +103,16 @@ class LogController extends Controller
                 'timestamps' => $identicalLogs->sortByDesc('created_at')->pluck('created_at')->toArray(),
             ],
         ]);
+    }
+
+    public function updateStatus(Log $log, UpdateLogStatusRequest $request)
+    {
+        Log::ofIdenticalLogs($log)->update(['status' => $request->get('status')]);
+
+        session()->flash('flash.bannerStyle', 'success');
+        $status = Str::lower($request->get('status'));
+        session()->flash('flash.banner', "This log has been $status  successfully");
+
+        return back(303);
     }
 }
