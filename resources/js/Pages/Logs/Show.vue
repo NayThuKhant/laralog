@@ -22,12 +22,13 @@ const props = defineProps({
         one_day_incidents: Number,
         one_week_incidents: Number,
         one_month_incidents: Number,
-        timestamps: Array
+        timestamps: Array,
+        identical_logs: Array
     },
 })
 
 const form = useForm({
-    status : ''
+    status: ''
 });
 
 const updateLogStatus = () => {
@@ -64,8 +65,9 @@ const isValidJsonMessage = computed(() => {
 
                 <span class="ml-3 text-gray-600 dark:text-gray-400">Json Viewer</span>
             </div>
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click="updateLogStatus">
-                Mark As {{log.status == "UNRESOLVED" ? "RESOLVED" : "UNRESOLVED"}}
+            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
+                           @click="updateLogStatus">
+                Mark As {{ log.status == "UNRESOLVED" ? "RESOLVED" : "UNRESOLVED" }}
             </PrimaryButton>
         </div>
 
@@ -83,9 +85,7 @@ const isValidJsonMessage = computed(() => {
             </div>
         </div>
         <div class="report-card">
-            <div class="flex justify-between">
-                <p class="font-bold mb-3">Context</p>
-            </div>
+            <p class="font-bold mb-3">Context</p>
 
             <div v-if="log.context">
                 <JsonTreeView v-if="state.openJsonViewer" :data="context" :maxDepth="3" color-scheme="dark"/>
@@ -97,12 +97,19 @@ const isValidJsonMessage = computed(() => {
         </div>
 
         <div class="report-card flex flex-col">
-            <h2 class="text-xl mb-4">Incidents Report</h2>
+             <p class="font-bold mb-3">Incidents Report</p>
             <div class="flex-1 flex justify-around">
                 <span class="text-sm"><span class="text-4xl">{{ reports.total_incidents }}</span> / total </span>
                 <span class="text-sm"><span class="text-4xl">{{ reports.one_day_incidents }}</span> / 24 hours </span>
                 <span class="text-sm"><span class="text-4xl">{{ reports.one_week_incidents }}</span> / 7 days </span>
                 <span class="text-sm"><span class="text-4xl">{{ reports.total_incidents }}</span> / 1 month </span>
+            </div>
+        </div>
+
+        <div class="report-card">
+             <p class="font-bold mb-3">Reported On</p>
+            <div class="flex flex-col">
+                <span class="text-sm mt-1" v-for="log in reports.identical_logs" :key="log.id"> {{ log.created_at }} </span>
             </div>
         </div>
 
