@@ -119,7 +119,7 @@ const isValidJsonMessage = computed(() => {
 
 <style scoped>
 .report-card {
-    @apply text-sm w-full p-4 bg-white dark:bg-gray-800 sm:p-6 shadow sm:rounded-md sm:rounded-md my-6 text-gray-600 dark:text-gray-400 overflow-flow;
+    @apply text-sm w-full p-4 bg-white dark:bg-gray-800 sm:p-6 shadow sm:rounded-md sm:rounded-md my-6 text-gray-600 dark:text-gray-400 overflow-auto;
 }
 
 
