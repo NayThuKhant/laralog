@@ -8,6 +8,7 @@ import Bin from '@/Icons/Bin.vue';
 import {useForm} from "@inertiajs/vue3";
 import {copyToClipboard} from "../../../Utils/useClipboard";
 import {ref} from "vue";
+import ConfirmsPassword from '@/Components/ConfirmsPassword.vue'
 
 const props = defineProps({
     team: {
@@ -120,14 +121,17 @@ let deleteSecretKey = () => {
                         Cancel
                     </SecondaryButton>
 
-                    <DangerButton
-                        class="ml-3"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        @click="deleteSecretKey"
-                    >
-                        Delete
-                    </DangerButton>
+
+                    <ConfirmsPassword @confirmed="deleteSecretKey">
+                        <DangerButton
+                            class="ml-3"
+                            :class="{ 'opacity-25': form.processing }"
+                            :disabled="form.processing"
+                        >
+                            Delete
+                        </DangerButton>
+                    </ConfirmsPassword>
+
                 </template>
             </ConfirmationModal>
         </template>

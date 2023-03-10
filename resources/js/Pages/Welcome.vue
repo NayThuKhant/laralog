@@ -11,6 +11,8 @@ defineProps({
     totalUserCount: Number,
     totalTeamCount: Number
 });
+
+
 </script>
 
 <template>

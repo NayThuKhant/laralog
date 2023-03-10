@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "@protonemedia/inertiajs-tables-laravel-query-builder": "^2.2.0",
-        "json-tree-view-vue3": "^0.2.3"
+        "json-tree-view-vue3": "^0.2.3",
+        "larascript.js": "^1.0.5"
     }
 }
