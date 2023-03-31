@@ -13,6 +13,10 @@ php artisan db:seed
 npm install && npm run local
 ```
 
+### Configuration
+#### Invite team member via email
+If you want to invite a member to a team via email, pls set the JETSTREAM_TEAM_INVITATION on .env to true.
+
 ![Dashboard](docs/screenshots/dashboard.png)
 ![Logs](docs/screenshots/logs.png)
 ![Log](docs/screenshots/log.png)
